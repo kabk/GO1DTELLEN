@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+
+<link rel="stylesheet" type="text/css" href="bootstrap-3.3.2-dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/button.css">
+<link rel="stylesheet" type="text/css" href="css/brandedbutton.css">
+<link rel="stylesheet" type="text/css" href="css/assets/animate.css">
+<link rel="stylesheet" type="text/css" href="css/assets/style.css">
+<script  type="text/javascript" src="css/jquery.textillate.js"></script>
+<script  type="text/javascript" src="css/assets/jquery.lettering.js"></script>
+<script  type="text/javascript" src="css/assets/jquery.fittext.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>To Make Tech Design Human Again, Look to the Past</title>
+<link href='http://fonts.googleapis.com/css?family=Arimo|Ubuntu|Lobster|Rokkitt|Roboto|Raleway|Roboto+Slab|Indie+Flower|Inconsolata|Orbitron|Cardo|Alike|Quantico|Press+Start+2P' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+<div class="col-xs-1">
+  </div> 
+
+<div display="none" class="grid grid-pad">
+        <section class="col-1-1">
+            
+            <div class="playground grid">
+            
+              
+              <div class="col-1-1 controls" style="padding-right: 0">
+                <form class="grid grid-pad">
+                  <div class="control col-1-2">
+                    <label>In Animation</label>
+                    <select data-key="effect" data-type="in"></select>
+                    <select data-key="type" data-type="in">
+                      <option value="">sequence</option>
+                      <option value="reverse">reverse</option>
+                      <option value="sync">sync</option>
+                      <option value="shuffle">shuffle</option>
+                    </select>
+                  </div>
+                  <div class="control col-1-2">
+                    <label>Out Animation</label>
+                    <select data-key="effect" data-type="out"></select>
+                    <select data-key="type" data-type="out">
+                      <option value="">sequence</option>
+                      <option value="reverse">reverse</option>
+                      <option value="sync">sync</option>
+                      <option selected="selected" value="shuffle">shuffle</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+            </div>
+        </section>
+      </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="css/assets/jquery.fittext.js"></script>
+<script src="css/assets/jquery.lettering.js"></script>
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<script src="css/jquery.textillate.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+  $(function (){
+    var log = function (msg) {
+      return function () {
+        if (console) console.log(msg);
+      }
+    }
+    $('code').each(function () {
+      var $this = $(this);
+      $this.text($this.html());
+    })
+
+    var animateClasses = 'flash bounce shake tada swing wobble pulse flip flipInX flipOutX flipInY flipOutY fadeIn fadeInUp fadeInDown fadeInLeft fadeInRight fadeInUpBig fadeInDownBig fadeInLeftBig fadeInRightBig fadeOut fadeOutUp fadeOutDown fadeOutLeft fadeOutRight fadeOutUpBig fadeOutDownBig fadeOutLeftBig fadeOutRightBig bounceIn bounceInDown bounceInUp bounceInLeft bounceInRight bounceOut bounceOutDown bounceOutUp bounceOutLeft bounceOutRight rotateIn rotateInDownLeft rotateInDownRight rotateInUpLeft rotateInUpRight rotateOut rotateOutDownLeft rotateOutDownRight rotateOutUpLeft rotateOutUpRight hinge rollIn rollOut';
+
+    var $form = $('.playground form')
+      , $viewport = $('.playground .viewport');
+
+    var getFormData = function () {
+      var data = { 
+        loop: true, 
+        in: { callback: log('in callback called.') }, 
+        out: { callback: log('out callback called.') }
+      };
+      
+      $form.find('[data-key="effect"]').each(function () {
+        var $this = $(this)
+          , key = $this.data('key')
+          , type = $this.data('type');
+
+          data[type][key] = $this.val();
+      });
+
+      $form.find('[data-key="type"]').each(function () {
+        var $this = $(this)
+          , key = $this.data('key')
+          , type = $this.data('type')
+          , val = $this.val();
+
+          data[type].shuffle = (val === 'shuffle');
+          data[type].reverse = (val === 'reverse');
+          data[type].sync = (val === 'sync');
+      });
+
+      return data;
+    };
+
+    $.each(animateClasses.split(' '), function (i, value) {
+      var type = '[data-type]'
+        , option = '<option value="' + value + '">' + value + '</option>';
+
+      if (/Out/.test(value) || value === 'hinge') {
+        type = '[data-type="out"]';
+      } else if (/In/.test(value)) {
+        type = '[data-type="in"]';
+      } 
+
+      if (type) {
+        $form.find('[data-key="effect"]' + type).append(option);        
+      }
+    });
+
+    $form.find('[data-key="effect"][data-type="in"]').val('fadeInLeftBig');
+    $form.find('[data-key="effect"][data-type="out"]').val('hinge');
+
+    $('.jumbotron h1')
+      .fitText(0.5)
+      .textillate({ in: { effect: 'flipInY' }});
+    
+    $('.jumbotron p')
+      .fitText(3.2, { maxFontSize: 18 })
+      .textillate({ initialDelay: 1000, in: { delay: 3, shuffle: true } });
+
+    setTimeout(function () {
+        $('.fade').addClass('in');
+    }, 250);
+
+    setTimeout(function () {
+      $('h1.glow').removeClass('in');
+    }, 2000);
+
+    var $tlt = $viewport.find('.tlt')
+      .on('start.tlt', log('start.tlt triggered.'))
+      .on('inAnimationBegin.tlt', log('inAnimationBegin.tlt triggered.'))
+      .on('inAnimationEnd.tlt', log('inAnimationEnd.tlt triggered.'))
+      .on('outAnimationBegin.tlt', log('outAnimationBegin.tlt triggered.'))
+      .on('outAnimationEnd.tlt', log('outAnimationEnd.tlt triggered.'))
+      .on('end.tlt', log('end.tlt'));
+    
+    $form.on('change', function () {
+      var obj = getFormData();
+      $tlt.textillate(obj);
+    }).trigger('change');
+
+  });
+
+	</script> 
+      
+
+<div class="col-xs-3">
+<p id="top2" class="small" >
+<a id="here" href="TomLakovic.html">TOM LACOVIC</a> 
+is <br>co-founder of <a id="here" href="http://www.industrypdx.com/">INDUSTRY</a>
+<br>
+<br>
+Click  <a id="here" href="TomLakovic.html">HERE</a> to find out more.
+<p class="readmore">
+<a href="TomLakovic.html">
+<img  src="smallbutton_03.png" alt="readmore">
+</a>
+ 
+</div>
+<div class="col-xs-5">
+<div class="grid grid-pad">
+        <section class="col-1-1">
+            
+            <div class="playground grid">
+              <div class=" viewport">
+                  <div class="tlt">
+                    <ul class="texts" style="display: none">
+                    <h1>To Make Tech Design Human Again, Look to the Past</h1>
+                    </ul>
+                  </div>
+              </div>
+              <!--
+              <div class="col-1-1 controls" style="padding-right: 0">
+                <form class="grid grid-pad">
+                  <div class="control col-1-2">
+                    <label>In Animation</label>
+                    <select data-key="effect" data-type="in"></select>
+                    <select data-key="type" data-type="in">
+                      <option value="">sequence</option>
+                      <option value="reverse">reverse</option>
+                      <option value="sync">sync</option>
+                      <option value="shuffle">shuffle</option>
+                    </select>
+                  </div>
+                  <div class="control col-1-2">
+                    <label>Out Animation</label>
+                    <select data-key="effect" data-type="out"></select>
+                    <select data-key="type" data-type="out">
+                      <option value="">sequence</option>
+                      <option value="reverse">reverse</option>
+                      <option value="sync">sync</option>
+                      <option selected="selected" value="shuffle">shuffle</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+            </div>
+        </section>
+      </div>
+      --> 
+
+<h1>To Make Tech Design Human Again, Look to the Past</h1>
+BY TOM LAKOVIC   02.03.15  |   6:20 AM  |  
+<br>
+<br>
+
+<p class="lead">
+Would you like to read this article? 
+<br>
+<br>
+CLICK on the button below
+</p>
+<ul>
+  <li><a href="backtothefuture.html" class="round green">Click<span class="round">This is gonna be so nice!!!</span></a></li>
+</ul> 
+ <p class="lead">
+TOUCH button below
+</p>
+<ul>
+  <li><a href="backtothefuture.html" class="round red">Touch<span class="round">This is gonna be better!!!</span></a></li>
+</ul> 
+<p class="lead">
+MOVE the button below
+</p>
+<ul>
+  <li><a href="backtothefuture.html" class="round yellow">Move <span class="round">This is gonna be the best!! </span></a></li>
+</ul> 
+
+
+
+
+
+
+</body>
+</html>
